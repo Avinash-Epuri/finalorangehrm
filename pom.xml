@@ -20,5 +20,10 @@
   		<artifactId>OrangeHrmPOM</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+  	<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.4.11</version>
+</dependency>
   </dependencies>
 </project>

@@ -1,37 +1,34 @@
 package com.pages;
  
-import com.microsoft.playwright.Page;
+import com.microsoft.playwright.*;
  
-public class Login{
+public class Login {
     private Page page;
- 
-    private final String usernameInput = "//input[@placeholder='Username']";
-    private final String passwordInput = "//input[@placeholder='Password']";
-    private final String loginButton = "//button[@type='submit']";
+    
+    // Locators
+    private String usernameId = "input[name='username']";
+    private String passwordId = "input[name='password']";
+    private String loginBtn = "button[type='submit']";
  
     public Login(Page page) {
         this.page = page;
     }
  
-    public void enterUsername(String username) {
-        page.locator(usernameInput).fill(username);
+    public void setName(String user) {
+        page.locator(usernameId).fill(user);
     }
  
-    public void enterPassword(String password) {
-        page.locator(passwordInput).fill(password);
+    public void setPassword(String passw) {
+        page.locator(passwordId).fill(passw);
     }
  
-    public void clickLogin() {
-        page.locator(loginButton).click();
-        // Wait for a selector indicating successful login, e.g. Admin tab visible
-        page.waitForSelector("//span[text()='Admin']", new Page.WaitForSelectorOptions().setTimeout(5000));
+    public void loginButton() {
+        page.locator(loginBtn).click();
     }
  
-    public void login(String username, String password) {
-        enterUsername(username);
-        enterPassword(password);
-        clickLogin();
+    public void loginCre(String username, String password) {
+        setName(username);
+        setPassword(password);
+        loginButton();
     }
 }
- 
- 

@@ -1,56 +1,70 @@
 package com.pages;
-import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.Page;
+ 
+import com.microsoft.playwright.*;
+ 
 public class AdminPage {
     private Page page;
-    private final Locator adminTab;
-    private final Locator addButton;
-    private final Locator userRoleDropdown;
-    private final Locator employeeNameInput;
-    private final Locator usernameInput;
-    private final Locator statusDropdown;
-    private final Locator passwordInput;
-    private final Locator confirmPasswordInput;
-    private final Locator saveButton;
+    
+    // Locators
+    private String adminTab = "//span[text()='Admin']";
+    private String addButton = "//button[normalize-space()='Add']";
+    private String employeeNameInput = "//input[@placeholder='Type for hints...']";
+    private String usernameInput = "//label[text()='Username']/parent::div/following-sibling::div/input";
+    private String passwordInput = "//label[text()='Password']/parent::div/following-sibling::div/input";
+    private String confirmPasswordInput = "//label[text()='Confirm Password']/parent::div/following-sibling::div/input";
+    private String saveButton = "//button[@type='submit']";
+ 
     public AdminPage(Page page) {
         this.page = page;
-        adminTab = page.locator("//span[text()='Admin']");
-        addButton = page.locator("//button[normalize-space()='Add']");
-        userRoleDropdown = page.locator("//label[text()='User Role']/following::div[1]//div[contains(@class,'oxd-select-text')]").first();
-        employeeNameInput = page.locator("//input[@placeholder='Type for hints...']");
-        usernameInput = page.locator("//label[text()='Username']/following::input[1]");
-        statusDropdown = page.locator("//label[text()='Status']/following::div[1]//div[contains(@class,'oxd-select-text')]").first();
-        passwordInput = page.locator("//label[text()='Password']/following::input[1]");
-        confirmPasswordInput = page.locator("//label[text()='Confirm Password']/following::input[1]");
-        saveButton = page.locator("//button[normalize-space()='Save']");
     }
-    public void openAdmin() {
-        adminTab.click();
+ 
+    public void openAdminSection() {
+        page.locator(adminTab).click();
     }
-    public void clickAdd() {
-        addButton.click();
-        System.out.println("11");
+ 
+    public void clickAddButton() {
+        page.locator(addButton).click();
     }
-
-    public void fillUserDetails(String empName, String username,
-                                 String password, String confirmPassword, String userRole, String status) {
-    	System.out.println("12");
-    	userRoleDropdown.click();
+ 
+    public void fillUserDetails(String empName, String username, String password, String confirmPassword) {
+        page.locator(employeeNameInput).waitFor(new Locator.WaitForOptions().setTimeout(15000));
+        
+        // Select User Role - using index-based approach
+        page.locator("//label[text()='User Role']/parent::div/following-sibling::div//div[contains(@class,'oxd-select-text-input')]").click();
+        page.waitForTimeout(1000);
         page.locator("//div[@role='listbox']//span[text()='Admin']").click();
-        employeeNameInput.fill(empName);
-        page.locator("//div[@role='listbox']//span[contains(text(),'" + empName + "')]").click();
-        usernameInput.fill(username);
-        statusDropdown.click();
+        page.waitForTimeout(500);
+        
+        // Fill Employee Name
+        page.locator(employeeNameInput).fill(empName);
+        page.waitForTimeout(2000); // Wait for autocomplete dropdown
+        
+        try {
+            // Click on the suggested employee from dropdown
+            page.locator("//div[@role='listbox']//span[contains(text(),'" + empName + "')]").first().click();
+            page.waitForTimeout(1000);
+        } catch (Exception e) {
+            System.out.println("Employee name '" + empName + "' not found or not clickable.");
+        }
+        
+        // Fill Username
+        page.locator(usernameInput).fill(username);
+        page.waitForTimeout(500);
+        
+        // Select Status
+        page.locator("//label[text()='Status']/parent::div/following-sibling::div//div[contains(@class,'oxd-select-text-input')]").click();
+        page.waitForTimeout(1000);
         page.locator("//div[@role='listbox']//span[text()='Enabled']").click();
-        passwordInput.fill(password);
-        confirmPasswordInput.fill(confirmPassword);
-        saveButton.click();
+        page.waitForTimeout(500);
+        
+        // Fill Passwords
+        page.locator(passwordInput).fill(password);
+        page.waitForTimeout(500);
+        page.locator(confirmPasswordInput).fill(confirmPassword);
+        page.waitForTimeout(500);
     }
-    public void admininput(String empName, String username,
-                                 String password, String confirmPassword, String userRole, String status) {
-    	openAdmin();
-    	clickAdd();
-    	fillUserDetails(empName, username,
-                 password, confirmPassword,  userRole,  status);
+ 
+    public void saveUser() {
+        page.locator(saveButton).click();
     }
 }
