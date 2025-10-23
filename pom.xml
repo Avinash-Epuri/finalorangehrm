@@ -15,10 +15,5 @@
     <version>7.7.0</version>
     <scope>test</scope>
 </dependency>
-  	<dependency>
-  		<groupId>com.orange.pom</groupId>
-  		<artifactId>OrangeHrmPOM</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
   </dependencies>
 </project>
